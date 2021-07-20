@@ -20,6 +20,9 @@ public class ApplicationConstants {
 	public static final String USER_ROLE = "USER";
 	
 	//date pattern
-	public static final String DATE_FORMAT = "dd.MM.yyyy";
+	public static final String DATE_FORMAT_API = "yyyy-MM-dd";
+	
+	//date pattern
+	public static final String DATE_FORMAT_BDD = "dd.MM.yyyy";
 
 }

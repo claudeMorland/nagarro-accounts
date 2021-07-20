@@ -121,7 +121,7 @@ public class AccountControllerTest {
 		
 		String myTasks = "[{\"id\":1,\"accountId\":3,\"date\":\"16.07.2020\",\"amount\":\"320.113318991709\"}]";
 
-        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=09.08.2020&&dateEnd=19.08.2021", 3))).andExpect(status().isOk()).andExpect(content().json(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=2020-08-09&&dateEnd=2021-08-19", 3))).andExpect(status().isOk()).andExpect(content().json(myTasks));
 
 	}
 	
@@ -134,7 +134,7 @@ public class AccountControllerTest {
 		
 		String myTasks = "[{\"id\":1,\"accountId\":3,\"date\":\"16.07.2020\",\"amount\":\"320.113318991709\"}]";
 
-		String dateStr = "16.07.2020";
+		String dateStr = "2020-07-16";
         mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=%s&&dateEnd=%s", 3, dateStr, dateStr))).andExpect(status().isOk()).andExpect(content().json(myTasks));
 
 	}
@@ -186,9 +186,9 @@ public class AccountControllerTest {
 		
 		when(accountsService.getStatementByDateRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
 		
-		String myTasks = "Text '2021.07.10' could not be parsed at index 2";
+		String myTasks = "Text '2021.07.10' could not be parsed at index 4";
 
-        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=2021.07.10&&dateEnd=16.07.2020", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=2021.07.10&&dateEnd=2020-07-16", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
 
 	}
 	
@@ -198,9 +198,9 @@ public class AccountControllerTest {
 		
 		when(accountsService.getStatementByDateRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
 		
-		String myTasks = "Text '16/07/2021' could not be parsed at index 2";
+		String myTasks = "Text '16/07/2021' could not be parsed at index 0";
 
-        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=16.07.2020&&dateEnd=16/07/2021", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=2020-07-16&&dateEnd=16/07/2021", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
 
 	}
 	
@@ -217,7 +217,7 @@ public class AccountControllerTest {
 		String myTasks = "dateStart should be inferior or equal to dateEnd";
 
 		
-        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=16.07.2021&&dateEnd=15.07.2021", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=2021-07-16&&dateEnd=2021-07-15", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
 
 	}
 	
@@ -251,7 +251,7 @@ public class AccountControllerTest {
 		String myTasks = "Multirange not allowed";
 
 		
-        mockMvc.perform(get(String.format("/accounts/%s/statements?amountStart=200&&amountEnd=100&&dateStart=16.07.2021&&dateEnd=20.07.2021", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?amountStart=200&&amountEnd=100&&dateStart=2021-07-16&&dateEnd=2021-07-20", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
 
 	}
 	
@@ -268,7 +268,7 @@ public class AccountControllerTest {
 		String myTasks = "Date range invalid";
 
 		
-        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=16.07.2021", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=2021-07-16", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
 
 	}
 	
@@ -299,8 +299,7 @@ public class AccountControllerTest {
 		String myTasks = "Missing path variable";
 
         mockMvc.perform(get("/accounts/statements/")).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
-        
-        // /statements/%s?dateStart=09.08.2020&&dateEnd=19.08.2021
+
 
 	}
 	

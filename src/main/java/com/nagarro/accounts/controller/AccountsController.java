@@ -52,8 +52,8 @@ public class AccountsController {
 	@GetMapping(value= {"/statements", "/{accountId}/statements"})
 	public ResponseEntity<Object> getStatements(
 			@Valid @Positive(message = "{accountId.positive}")@PathVariable Integer accountId,//
-			@Valid @RequestParam(required = false) @DateTimeFormat(pattern = DATE_FORMAT) LocalDate dateStart,// 
-			@Valid @RequestParam(required = false) @DateTimeFormat(pattern = DATE_FORMAT) LocalDate dateEnd,//
+			@Valid @RequestParam(required = false) @DateTimeFormat(pattern = DATE_FORMAT_API) LocalDate dateStart,// 
+			@Valid @RequestParam(required = false) @DateTimeFormat(pattern = DATE_FORMAT_API) LocalDate dateEnd,//
 			@Valid @Positive(message = "{amountStart.positive}") @RequestParam(required = false) Integer amountStart, //
 			@Valid @Positive(message = "{amountEnd.positive}") @RequestParam(required = false) Integer amountEnd) {
 		LOGGER.debug("getStatementByDateRange");

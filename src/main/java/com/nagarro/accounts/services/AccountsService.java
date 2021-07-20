@@ -37,8 +37,8 @@ public class AccountsService {
 	private static final String COL_AMOUNT = "amount";
 	//COLUMN_DATEFIELD
 	private static final String COL_DATEFIELD = "datefield";
-	//FORMATTER
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
+	//BDD DATE FORMATTER
+	private static final DateTimeFormatter FORMATTER_BDD = DateTimeFormatter.ofPattern(DATE_FORMAT_BDD);
 
 	/**
 	 * months back statement number
@@ -68,7 +68,7 @@ public class AccountsService {
 						while (resultSet.next()) {
 							String dateField = resultSet.getString(COL_DATEFIELD);
 							// process it
-							LocalDate dateFieldDate = LocalDate.parse(dateField, FORMATTER);
+							LocalDate dateFieldDate = LocalDate.parse(dateField, FORMATTER_BDD);
 
 							// the dateField is in the range (> or = to dateStart and < or = to dateEnd)
 							if ((dateStart.equals(dateFieldDate) || dateFieldDate.isAfter(dateStart))

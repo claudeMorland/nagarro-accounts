@@ -25,14 +25,14 @@ paths:
             format: int64
         - name: dateStart
           in: query
-          description: date start range with format dd.mm.yyyy
+          description: date start range with format yyyy-MM-dd
           required: false
           schema:
             type: string
             format: date
         - name: dateEnd
           in: query
-          description: date end range with format dd.mm.yyyy
+          description: date end range with format yyyy-MM-dd
           required: false
           schema:
             type: string
@@ -104,7 +104,6 @@ components:
           format: int64
         date:
           type: string
-          format: date
         amount:
           type: string
         account:
