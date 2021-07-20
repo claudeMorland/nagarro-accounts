@@ -58,13 +58,13 @@ public class AccountControllerTest {
 	@MockBean
 	private JdbcTemplate jdbcTemplate;
 	
-	private Statement mockStatement = new Statement(1, 3, "16.07.2020", "320.113318991709");
+	private Statement mockStatement = new Statement(1, 3, "16.07.2020", "320.113318991709", "current", "0012250016001");
 	
 
 	@Test
 	@WithMockUser(username = USER_LOGIN, password = USER_LOGIN, roles = { USER_ROLE })
 	public void pingDefaultMessage() throws Exception {
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/ping").accept(MediaType.APPLICATION_JSON);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/accounts/ping").accept(MediaType.APPLICATION_JSON);
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
@@ -84,7 +84,7 @@ public class AccountControllerTest {
 		
 		String myTasks = "[{\"id\":1,\"accountId\":3,\"date\":\"16.07.2020\",\"amount\":\"320.113318991709\"}]";
 
-        mockMvc.perform(get(String.format("/statements/%s", 3))).andExpect(status().isOk()).andExpect(content().json(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements", 3))).andExpect(status().isOk()).andExpect(content().json(myTasks));
 
 	}
 	
@@ -96,7 +96,7 @@ public class AccountControllerTest {
 		
 		String myTasks = "[{\"id\":1,\"accountId\":3,\"date\":\"16.07.2020\",\"amount\":\"320.113318991709\"}]";
 
-        mockMvc.perform(get(String.format("/statements/%s", 3))).andExpect(status().isOk()).andExpect(content().json(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements", 3))).andExpect(status().isOk()).andExpect(content().json(myTasks));
 
 	}
 	
@@ -108,7 +108,7 @@ public class AccountControllerTest {
 		
 		String myTasks = "No result found";
 
-        mockMvc.perform(get(String.format("/statements/%s", 3))).andExpect(status().isNotFound()).andExpect(content().string(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements", 3))).andExpect(status().isNotFound()).andExpect(content().string(myTasks));
 
 	}
 	
@@ -121,7 +121,7 @@ public class AccountControllerTest {
 		
 		String myTasks = "[{\"id\":1,\"accountId\":3,\"date\":\"16.07.2020\",\"amount\":\"320.113318991709\"}]";
 
-        mockMvc.perform(get(String.format("/statements/%s?dateStart=09.08.2020&&dateEnd=19.08.2021", 3))).andExpect(status().isOk()).andExpect(content().json(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=09.08.2020&&dateEnd=19.08.2021", 3))).andExpect(status().isOk()).andExpect(content().json(myTasks));
 
 	}
 	
@@ -135,7 +135,7 @@ public class AccountControllerTest {
 		String myTasks = "[{\"id\":1,\"accountId\":3,\"date\":\"16.07.2020\",\"amount\":\"320.113318991709\"}]";
 
 		String dateStr = "16.07.2020";
-        mockMvc.perform(get(String.format("/statements/%s?dateStart=%s&&dateEnd=%s", 3, dateStr, dateStr))).andExpect(status().isOk()).andExpect(content().json(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=%s&&dateEnd=%s", 3, dateStr, dateStr))).andExpect(status().isOk()).andExpect(content().json(myTasks));
 
 	}
 	
@@ -150,7 +150,7 @@ public class AccountControllerTest {
 		String myTasks = "[{\"id\":1,\"accountId\":3,\"date\":\"16.07.2020\",\"amount\":\"320.113318991709\"}]";
 
 		String amount = "320";
-		mockMvc.perform(get(String.format("/statements/%s?amountStart=%s&&amountEnd=%s", 3, amount, amount)))
+		mockMvc.perform(get(String.format("/accounts/%s/statements?amountStart=%s&&amountEnd=%s", 3, amount, amount)))
 				.andExpect(status().isOk()).andExpect(content().json(myTasks));
 
 	}
@@ -163,7 +163,7 @@ public class AccountControllerTest {
 		
 		String myTasks = "Invalid argument type : For input string: \"XX\"";
 
-        mockMvc.perform(get(String.format("/statements/%s?amountStart=XX&&amountEnd=20", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?amountStart=XX&&amountEnd=20", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
 
 	}
 	
@@ -175,7 +175,7 @@ public class AccountControllerTest {
 		
 		String myTasks = "Invalid argument type : For input string: \"20.2\"";
 
-        mockMvc.perform(get(String.format("/statements/%s?amountStart=10&&amountEnd=20.2", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?amountStart=10&&amountEnd=20.2", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
 
 	}
 	
@@ -188,7 +188,7 @@ public class AccountControllerTest {
 		
 		String myTasks = "Text '2021.07.10' could not be parsed at index 2";
 
-        mockMvc.perform(get(String.format("/statements/%s?dateStart=2021.07.10&&dateEnd=16.07.2020", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=2021.07.10&&dateEnd=16.07.2020", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
 
 	}
 	
@@ -200,7 +200,7 @@ public class AccountControllerTest {
 		
 		String myTasks = "Text '16/07/2021' could not be parsed at index 2";
 
-        mockMvc.perform(get(String.format("/statements/%s?dateStart=16.07.2020&&dateEnd=16/07/2021", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=16.07.2020&&dateEnd=16/07/2021", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
 
 	}
 	
@@ -217,7 +217,7 @@ public class AccountControllerTest {
 		String myTasks = "dateStart should be inferior or equal to dateEnd";
 
 		
-        mockMvc.perform(get(String.format("/statements/%s?dateStart=16.07.2021&&dateEnd=15.07.2021", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=16.07.2021&&dateEnd=15.07.2021", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
 
 	}
 	
@@ -234,7 +234,7 @@ public class AccountControllerTest {
 		String myTasks = "amountStart should be inferior or equal to amountEnd";
 
 		
-        mockMvc.perform(get(String.format("/statements/%s?amountStart=200&&amountEnd=100", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?amountStart=200&&amountEnd=100", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
 
 	}
 	
@@ -251,7 +251,7 @@ public class AccountControllerTest {
 		String myTasks = "Multirange not allowed";
 
 		
-        mockMvc.perform(get(String.format("/statements/%s?amountStart=200&&amountEnd=100&&dateStart=16.07.2021&&dateEnd=20.07.2021", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?amountStart=200&&amountEnd=100&&dateStart=16.07.2021&&dateEnd=20.07.2021", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
 
 	}
 	
@@ -268,7 +268,7 @@ public class AccountControllerTest {
 		String myTasks = "Date range invalid";
 
 		
-        mockMvc.perform(get(String.format("/statements/%s?dateStart=16.07.2021", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?dateStart=16.07.2021", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
 
 	}
 	
@@ -285,7 +285,7 @@ public class AccountControllerTest {
 		String myTasks = "Amount range invalid";
 
 		
-        mockMvc.perform(get(String.format("/statements/%s?amountStart=100", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+        mockMvc.perform(get(String.format("/accounts/%s/statements?amountStart=100", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
 
 	}
 	
@@ -296,9 +296,9 @@ public class AccountControllerTest {
 		
 		when(accountsService.getStatementLastMonths(Mockito.anyInt())).thenReturn(Arrays.asList(mockStatement));
 		
-		String myTasks = "[{\"id\":1,\"accountId\":3,\"date\":\"16.07.2020\",\"amount\":\"320.113318991709\"}]";
+		String myTasks = "Missing path variable";
 
-        mockMvc.perform(get("/statements/")).andExpect(status().isBadRequest()).andExpect(content().json(myTasks));
+        mockMvc.perform(get("/accounts/statements/")).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
         
         // /statements/%s?dateStart=09.08.2020&&dateEnd=19.08.2021
 
