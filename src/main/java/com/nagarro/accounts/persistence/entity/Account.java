@@ -2,6 +2,11 @@ package com.nagarro.accounts.persistence.entity;
 
 import java.util.Objects;
 
+/**
+ * Entity for Account
+ * @author claud
+ *
+ */
 public class Account {
 	
 	//type of account
@@ -19,6 +24,10 @@ public class Account {
 		super();
 		this.type = type;
 		this.number = number;
+	}
+
+
+	public Account() {
 	}
 
 

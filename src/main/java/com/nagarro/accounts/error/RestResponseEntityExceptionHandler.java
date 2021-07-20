@@ -1,6 +1,7 @@
 package com.nagarro.accounts.error;
 
-import static com.nagarro.accounts.common.ApplicationConstants.*;
+import static com.nagarro.accounts.common.ApplicationConstants.DATE_FORMAT_API;
+import static com.nagarro.accounts.common.ApplicationConstants.UNKNOWN_ERROR_PLEASE_CONTACT_THE_ADMINISTATROR;
 
 import java.beans.PropertyEditorSupport;
 import java.time.LocalDate;
@@ -12,12 +13,10 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -57,24 +56,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
 	// API
 
-	// 400
-
-	@ExceptionHandler({ DataIntegrityViolationException.class })
-	public ResponseEntity<Object> handleBadRequest(final DataIntegrityViolationException ex, final WebRequest request) {
-		final String bodyOfResponse = UNKNOWN_ERROR_PLEASE_CONTACT_THE_ADMINISTATROR;
-		logger.error("DataBase integrity violation", ex);
-		return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-	}
-
-	@Override
-	protected ResponseEntity<Object> handleHttpMessageNotReadable(final HttpMessageNotReadableException ex,
-			final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
-		final String bodyOfResponse = "HTTP Message not readable";
-		logger.error(bodyOfResponse, ex);
-		// ex.getCause() instanceof JsonMappingException, JsonParseException // for
-		// additional information later on
-		return handleExceptionInternal(ex, bodyOfResponse, headers, HttpStatus.BAD_REQUEST, request);
-	}
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex,

@@ -29,7 +29,7 @@ public class JWTUtility implements Serializable {
     @Value("${jwt.token.validity:5}")
     public Long jwtTokenValidity;
 
-    @Value("${jwt.secret}")
+    @Value("${jwt.secret:1234}")
     private String secretKey;
 
     //retrieve username from jwt token

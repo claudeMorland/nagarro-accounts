@@ -1,21 +1,25 @@
 package com.nagarro.accounts;
 
-import static com.nagarro.accounts.common.ApplicationConstants.*;
+import static com.nagarro.accounts.common.ApplicationConstants.ADMIN_LOGIN;
+import static com.nagarro.accounts.common.ApplicationConstants.ADMIN_ROLE;
+import static com.nagarro.accounts.common.ApplicationConstants.USER_LOGIN;
+import static com.nagarro.accounts.common.ApplicationConstants.USER_ROLE;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +27,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -34,9 +38,9 @@ import com.nagarro.accounts.persistence.entity.Statement;
 import com.nagarro.accounts.security.config.SecurityConfiguration;
 import com.nagarro.accounts.services.AccountsService;
 
-@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-@WebMvcTest(value = AccountsController.class)
 @Import(SecurityConfiguration.class)
 public class AccountControllerTest {
 	
@@ -62,13 +66,13 @@ public class AccountControllerTest {
 	
 
 	@Test
-	@WithMockUser(username = USER_LOGIN, password = USER_LOGIN, roles = { USER_ROLE })
+	@WithMockUser(username = USER_LOGIN, password = USER_LOGIN, authorities = { USER_ROLE })
 	public void pingDefaultMessage() throws Exception {
 		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/accounts/ping").accept(MediaType.APPLICATION_JSON);
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-		System.out.println(result.getResponse());
+		
 		String expected = "Application acccounts is running";
 		
 		assertTrue(result.getResponse()
@@ -76,7 +80,7 @@ public class AccountControllerTest {
 	}
 	
 	@Test
-	@WithMockUser(username = USER_LOGIN, password = USER_LOGIN, roles = { USER_ROLE })
+	@WithMockUser(username = USER_LOGIN, password = USER_LOGIN, authorities = { USER_ROLE })
 	public void getStatementUserSuccess() throws Exception {
 		
 		
@@ -89,7 +93,7 @@ public class AccountControllerTest {
 	}
 	
 	@Test
-	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, roles = { ADMIN_ROLE })
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
 	public void getStatementAdminSuccess() throws Exception {
 		
 		when(accountsService.getStatementLastMonths(Mockito.anyInt())).thenReturn(Arrays.asList(mockStatement));
@@ -101,10 +105,10 @@ public class AccountControllerTest {
 	}
 	
 	@Test
-	@WithMockUser(username = USER_LOGIN, password = USER_LOGIN, roles = { USER_ROLE })
+	@WithMockUser(username = USER_LOGIN, password = USER_LOGIN, authorities = { USER_ROLE })
 	public void getStatementByDateRangeAccountNotFound() throws Exception {
 		
-		when(accountsService.getStatementLastMonths(Mockito.anyInt())).thenReturn(null);
+		when(accountsService.getStatementLastMonths(Mockito.anyInt())).thenReturn(new ArrayList<Statement>());
 		
 		String myTasks = "No result found";
 
@@ -114,7 +118,7 @@ public class AccountControllerTest {
 	
 	
 	@Test
-	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, roles = { ADMIN_ROLE })
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
 	public void getStatementByDateRangeSuccess() throws Exception {
 		
 		when(accountsService.getStatementByDateRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
@@ -127,7 +131,7 @@ public class AccountControllerTest {
 	
 	//test with the same date
 	@Test
-	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, roles = { ADMIN_ROLE })
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
 	public void getStatementByDateRangeEqual() throws Exception {
 		
 		when(accountsService.getStatementByDateRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
@@ -141,7 +145,7 @@ public class AccountControllerTest {
 	
 	//test with the same date
 	@Test
-	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, roles = { ADMIN_ROLE })
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
 	public void getStatementByAmountRangeEqual() throws Exception {
 
 		when(accountsService.getStatementByAmountRange(Mockito.anyInt(), Mockito.any(), Mockito.any()))
@@ -156,7 +160,7 @@ public class AccountControllerTest {
 	}
 	
 	@Test
-	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, roles = { ADMIN_ROLE })
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
 	public void getStatementByAmountRangeStartFormat() throws Exception {
 		
 		when(accountsService.getStatementByAmountRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
@@ -168,7 +172,7 @@ public class AccountControllerTest {
 	}
 	
 	@Test
-	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, roles = { ADMIN_ROLE })
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
 	public void getStatementByAmountRangeEndFormat() throws Exception {
 		
 		when(accountsService.getStatementByAmountRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
@@ -181,7 +185,7 @@ public class AccountControllerTest {
 	
 	
 	@Test
-	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, roles = { ADMIN_ROLE })
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
 	public void getStatementByDateRangeStartFormat() throws Exception {
 		
 		when(accountsService.getStatementByDateRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
@@ -193,7 +197,7 @@ public class AccountControllerTest {
 	}
 	
 	@Test
-	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, roles = { ADMIN_ROLE })
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
 	public void getStatementByDateRangeEndFormat() throws Exception {
 		
 		when(accountsService.getStatementByDateRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
@@ -209,7 +213,7 @@ public class AccountControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, roles = { ADMIN_ROLE })
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
 	public void getStatementByDateRangeIncompatible() throws Exception {
 		
 		when(accountsService.getStatementByDateRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
@@ -226,7 +230,7 @@ public class AccountControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, roles = { ADMIN_ROLE })
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
 	public void getStatementByAmountRangeIncompatible() throws Exception {
 		
 		when(accountsService.getStatementByAmountRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
@@ -243,7 +247,7 @@ public class AccountControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, roles = { ADMIN_ROLE })
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
 	public void getStatementByMultiRange() throws Exception {
 		
 		when(accountsService.getStatementByAmountRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
@@ -260,7 +264,7 @@ public class AccountControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, roles = { ADMIN_ROLE })
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
 	public void getStatementByDateRangeMissing() throws Exception {
 		
 		when(accountsService.getStatementByDateRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
@@ -272,12 +276,25 @@ public class AccountControllerTest {
 
 	}
 	
+	@Test
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
+	public void getStatementByDateRangeMissingStart() throws Exception {
+		
+		when(accountsService.getStatementByDateRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
+		
+		String myTasks = "Date range invalid";
+
+		
+        mockMvc.perform(get(String.format("/accounts/%s/statements?dateEnd=2021-07-16", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+
+	}
+	
 	/**
-	 * test the case where dateStart but not dateEnd
+	 * test the case where amountStart but not amountEnd
 	 * @throws Exception
 	 */
 	@Test
-	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, roles = { ADMIN_ROLE })
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
 	public void getStatementByAmountRangeMissing() throws Exception {
 		
 		when(accountsService.getStatementByDateRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
@@ -289,8 +306,25 @@ public class AccountControllerTest {
 
 	}
 	
+	/**
+	 * test the case where amountStart but not amountEnd
+	 * @throws Exception
+	 */
 	@Test
-	@WithMockUser(username = USER_LOGIN, password = USER_LOGIN, roles = { USER_ROLE })
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
+	public void getStatementByAmountRangeStartMissing() throws Exception {
+		
+		when(accountsService.getStatementByDateRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
+		
+		String myTasks = "Amount range invalid";
+
+		
+        mockMvc.perform(get(String.format("/accounts/%s/statements?amountEnd=100", 3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+
+	}
+	
+	@Test
+	@WithMockUser(username = USER_LOGIN, password = USER_LOGIN, authorities = { USER_ROLE })
 	public void getStatementAccountIDMissing() throws Exception {
 		
 		

@@ -4,6 +4,12 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * Entity for Statement
+ * Contains embedded field account
+ * @author claud
+ *
+ */
 public class Statement {
 	
 	@NotNull
@@ -22,20 +28,6 @@ public class Statement {
 	private Account account;
 	
 	
-
-	/**
-	 * @param id
-	 * @param accountId
-	 * @param date
-	 * @param amount
-	 */
-	public Statement(Integer id, Integer accountId, String date, String amount) {
-		super();
-		this.id = id;
-		this.accountId = accountId;
-		this.date = date;
-		this.amount = amount;
-	}
 	
 	/**
 	 * Constructor with account info
@@ -56,22 +48,10 @@ public class Statement {
 		this.account = new Account(accountType, accountNumber);
 	}
 	
-	/**
-	 * Constructor with account object
-	 * @param id
-	 * @param accountId
-	 * @param date
-	 * @param amount
-	 * @param account
-	 */
-	public Statement(Integer id, Integer accountId, String date, String amount, Account account) {
-		super();
-		this.id = id;
-		this.accountId = accountId;
-		this.date = date;
-		this.amount = amount;
-		this.account = account;
+
+	public Statement() {
 	}
+
 
 	/**
 	 * @return the id

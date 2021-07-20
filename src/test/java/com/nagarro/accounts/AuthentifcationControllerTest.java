@@ -1,5 +1,6 @@
 package com.nagarro.accounts;
 
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,6 +21,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.nagarro.accounts.security.config.SecurityConfiguration;
 import com.nagarro.accounts.security.controller.AuthentificationController;
+import com.nagarro.accounts.security.model.JwtRequest;
+import com.nagarro.accounts.security.model.JwtResponse;
 
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
@@ -96,6 +99,37 @@ public class AuthentifcationControllerTest {
          .andExpect(status().isBadRequest());
 
 	}
+	
+	
+	@Test
+	public void compareJwtRequest() throws Exception {
+		JwtRequest jwtRequest1 = new JwtRequest();
+		jwtRequest1.setUsername("username");
+		jwtRequest1.setPassword("password");
+		
+		JwtRequest jwtRequest2 = new JwtRequest();
+		jwtRequest2.setUsername(jwtRequest1.getUsername());
+		jwtRequest2.setPassword(jwtRequest1.getPassword());
+		
+		
+		assertEquals(jwtRequest1, jwtRequest2);		
+		assertEquals(jwtRequest1.toString(), jwtRequest2.toString());
+		
+	}
+	
+	@Test
+	public void compareJwtResponse() throws Exception {
+		JwtResponse jwtResponse1 = new JwtResponse();
+		jwtResponse1.setJwtToken("jwtToken");
+		
+		JwtResponse jwtResponse2 = new JwtResponse();
+		jwtResponse2.setJwtToken(jwtResponse1.getJwtToken());
+		
+		assertEquals(jwtResponse1, jwtResponse2);		
+		assertEquals(jwtResponse1.toString(), jwtResponse2.toString());
+		
+	}
+	
 
 	
 }

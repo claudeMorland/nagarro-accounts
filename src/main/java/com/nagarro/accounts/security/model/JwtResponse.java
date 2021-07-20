@@ -10,6 +10,14 @@ import java.util.Objects;
 public class JwtResponse {
 
     private String jwtToken;
+    
+    
+	/**
+	 * 
+	 */
+	public JwtResponse() {
+		super();
+	}
 
 	/**
 	 * @param jwtToken

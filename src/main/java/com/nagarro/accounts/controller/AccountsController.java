@@ -60,7 +60,7 @@ public class AccountsController {
 
 		List<Statement> statements = new ArrayList<>();
 		
-		this.checkRequestParam(accountId, dateStart, dateEnd, amountStart, amountEnd);
+		this.checkRequestParam(dateStart, dateEnd, amountStart, amountEnd);
 		
 		//in checkRequestParam we already check that both start and end
 		// of a range come together
@@ -78,7 +78,7 @@ public class AccountsController {
 			statements = this.accountsService.getStatementByAmountRange(accountId, amountStart, amountEnd);
 		}
 		
-		if (statements == null || statements.isEmpty()) {
+		if (statements.isEmpty()) {
 			throw new ResourceNotFoundException("No result found");
 		}
 
@@ -88,18 +88,14 @@ public class AccountsController {
 	/**
 	 * Check the request param : check that the range are valid with start and end
 	 * and the range1 <= range2
-	 * @param accountId
 	 * @param dateStart
 	 * @param dateEnd
 	 * @param amountStart
 	 * @param amountEnd
 	 * @throws AccountBadRequestException if reach functional error on param
 	 */
-	private void checkRequestParam(Integer accountId, LocalDate dateStart, LocalDate dateEnd, Integer amountStart,
+	private void checkRequestParam(LocalDate dateStart, LocalDate dateEnd, Integer amountStart,
 			Integer amountEnd) throws AccountBadRequestException {
-		if (accountId == null) {
-			throw new AccountBadRequestException("accountId is mandatory");
-		}
 		
 		if ( (amountStart != null && amountEnd == null) || (amountStart == null && amountEnd != null)) {
 			throw new AccountBadRequestException("Amount range invalid");
