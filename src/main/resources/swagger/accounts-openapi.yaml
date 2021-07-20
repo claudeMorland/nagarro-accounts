@@ -1,0 +1,125 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: accounts and statement api
+  license:
+    name: NAGARRO
+servers:
+  - url: http://localhost:8080
+paths:
+  /accounts/{accountId}/statements:
+    get:
+      summary: allow to retrieve the statements information resource for the accountId
+      operationId: showStatementByAccountId
+      tags:
+        - accounts
+      security:
+        - bearerAuth: [] 
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: the accounts identifier, as accountId 
+          schema:
+            type: integer
+            format: int64
+        - name: dateStart
+          in: query
+          description: date start range with format dd.mm.yyyy
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: dateEnd
+          in: query
+          description: date end range with format dd.mm.yyyy
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: amountStart
+          in: query
+          description: amount range start (integer portion of the number)
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: amountEnd
+          in: query
+          description: amount range end  (integer portion of the number)
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Statements"
+        400:
+          description: Bad request.
+        401:
+          description: Authorization information is missing or invalid.
+        404:
+          description: A statement with the specified ID was not found.
+        500:
+          description: Unexpected error.
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  securitySchemes:
+    bearerAuth:            
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  
+  schemas:
+    Account:
+      required:
+        - type
+        - number
+      properties:
+        type:
+          type: string
+        number:
+          type: string
+    Statement:
+      required:
+        - id
+        - date
+        - amount
+        - accountId
+      properties:
+        id:
+          type: integer
+          format: int64
+        accountId:
+          type: integer
+          format: int64
+        date:
+          type: string
+          format: date
+        amount:
+          type: string
+        account:
+          $ref: "#/components/schemas/Account"
+    Statements:
+      type: array
+      items:
+        $ref: "#/components/schemas/Statement"
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
