@@ -1,6 +1,7 @@
 package com.nagarro.accounts;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,6 +53,8 @@ public class AuthentifcationControllerTest {
 	
 	private final String unknownJsonBody = "{\"username\": \"xxx\", \"password\": \"xxx\"}";
 	
+	private final String userNameEmptyJsonBody = "{\"username\": \"\", \"password\": \"user\"}";
+	
 	@Test
 	public void authenticateUser() throws Exception {
 		
@@ -89,6 +92,18 @@ public class AuthentifcationControllerTest {
 	}
 	
 	@Test
+	public void authenticateUserEmpty() throws Exception {
+		
+		 mockMvc
+         .perform(post("/authenticate")
+           .content(userNameEmptyJsonBody)
+           .contentType("application/json"))
+         .andDo(print())
+         .andExpect(status().isBadRequest());
+
+	}
+	
+	@Test
 	public void authenticateUserMissing() throws Exception {
 		final String userMissingJsonBody = "{\"password\": \"pwd\"}";
 		 mockMvc
@@ -115,6 +130,11 @@ public class AuthentifcationControllerTest {
 		assertEquals(jwtRequest1, jwtRequest2);		
 		assertEquals(jwtRequest1.toString(), jwtRequest2.toString());
 		
+		jwtRequest2.setUsername("username2");
+		
+		assertNotEquals(jwtRequest1, jwtRequest2);
+		assertNotEquals(jwtRequest1, null);
+				
 	}
 	
 	@Test
@@ -127,6 +147,11 @@ public class AuthentifcationControllerTest {
 		
 		assertEquals(jwtResponse1, jwtResponse2);		
 		assertEquals(jwtResponse1.toString(), jwtResponse2.toString());
+		
+		jwtResponse2.setJwtToken("jwtToken2");
+		assertNotEquals(jwtResponse1, jwtResponse2);
+				
+		assertNotEquals(jwtResponse1, null);
 		
 	}
 	

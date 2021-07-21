@@ -7,6 +7,7 @@ import java.util.Objects;
  * @author claud
  *
  */
+
 public class Account {
 	
 	//type of account

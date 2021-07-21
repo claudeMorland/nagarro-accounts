@@ -1,6 +1,7 @@
 package com.nagarro.accounts;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +30,7 @@ public class AccountsTest {
 		statement1.setAccountId(11);
 		statement1.setDate("2021-07-19");
 		statement1.setAmount("30.00");
-		
+				
 		Account account1 = new Account();
 		account1.setNumber("1111");
 		account1.setType("current");
@@ -47,9 +48,20 @@ public class AccountsTest {
 		statement2.setAccount(account2);
 		
 		assertEquals(statement1, statement2);
-		assertEquals(account1, account2);
+		assertEquals(account1, account2);		
+		assertEquals(statement1.getAccount(), statement2.getAccount());
 		
 		assertEquals(statement1.toString(), statement2.toString());
 		assertEquals(account1.toString(), account2.toString());
+				
+		account2.setType("periodic");
+		assertNotEquals(statement1, statement2);
+		assertNotEquals(account1, account2);
+		assertNotEquals(statement1.getAccount(), statement2.getAccount());
+		
+		
+		assertNotEquals(statement1, null);		
+		assertNotEquals(account1, null);
+		assertNotEquals(statement1.getAccount(), null);
 	}
 }

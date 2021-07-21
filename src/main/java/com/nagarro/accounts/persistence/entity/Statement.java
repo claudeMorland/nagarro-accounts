@@ -125,10 +125,12 @@ public class Statement {
 		this.account = account;
 	}
 
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(accountId, amount, date, id);
+		return Objects.hash(account, accountId, amount, date, id);
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -139,9 +141,11 @@ public class Statement {
 		if (getClass() != obj.getClass())
 			return false;
 		Statement other = (Statement) obj;
-		return Objects.equals(accountId, other.accountId) && Objects.equals(amount, other.amount)
-				&& Objects.equals(date, other.date) && Objects.equals(id, other.id);
+		return Objects.equals(account, other.account) && Objects.equals(accountId, other.accountId)
+				&& Objects.equals(amount, other.amount) && Objects.equals(date, other.date)
+				&& Objects.equals(id, other.id);
 	}
+
 
 	@Override
 	public String toString() {
@@ -151,6 +155,7 @@ public class Statement {
 		return builder.toString();
 	}
 
+	
 	
 	
 

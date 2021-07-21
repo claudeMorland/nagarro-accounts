@@ -337,5 +337,31 @@ public class AccountControllerTest {
 
 	}
 	
+	@Test
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
+	public void getStatementConstaintHandlerAccountNegative() throws Exception {
+		
+		when(accountsService.getStatementByAmountRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(mockStatement));
+		
+		String myTasks = "[\"accountId must be a positive value\"]";
+
+		
+        mockMvc.perform(get(String.format("/accounts/%s/statements?amountStart=200&&amountEnd=300", -3))).andExpect(status().isBadRequest()).andExpect(content().string(myTasks));
+
+	}
+	
+	@Test
+	@WithMockUser(username = ADMIN_LOGIN, password = ADMIN_LOGIN, authorities = { ADMIN_ROLE })
+	public void getStatementHandlerNullPointer() throws Exception {
+		
+		when(accountsService.getStatementByAmountRange(Mockito.anyInt(), Mockito.any(), Mockito.any())).thenReturn(null);
+		
+		String myTasks = "Unknown error. Please contact the administatror";
+
+		
+        mockMvc.perform(get(String.format("/accounts/%s/statements?amountStart=200&&amountEnd=300", 3))).andExpect(status().isInternalServerError()).andExpect(content().string(myTasks));
+
+	}
+	
 	
 }

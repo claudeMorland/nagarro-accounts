@@ -33,7 +33,7 @@ import com.nagarro.accounts.error.functional.AuthentificationBadRequestException
 import com.nagarro.accounts.error.functional.ResourceNotFoundException;
 import com.nagarro.accounts.error.functional.UserNotFoundRequestException;
 
-import io.jsonwebtoken.ExpiredJwtException;
+
 import io.jsonwebtoken.JwtException;
 
 @ControllerAdvice
@@ -110,12 +110,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 				request);
 	}
 
-	@ExceptionHandler(ExpiredJwtException.class)
-	public ResponseEntity<Object> handleExpiredJwtException(final ExpiredJwtException ex, final WebRequest request) {
-		logger.error(ex.getLocalizedMessage(), ex);
-		final String bodyOfResponse = UNKNOWN_ERROR_PLEASE_CONTACT_THE_ADMINISTATROR;
-		return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
-	}
 
 	/**
 	 * Exception thrown when
