@@ -1,0 +1,56 @@
+openapi: 3.0.2
+info:
+  title: Generate bearer token - OpenAPI 3.0
+  version : '1.0'
+  description: |-
+    This is a tool to generate a valid token use to call the Rest Apis
+servers:
+  - url: localhost:8080
+tags:
+  - name: user
+    description: token generation
+    externalDocs:
+      description: get valid token bearer
+      url: 'http://swagger.io'
+paths:
+  /authenticate:
+    post:
+      tags:
+        - authentication
+      summary: Create a token bearer
+      description: create a token bearer
+      operationId: createToken
+      requestBody:
+        description: Created token object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JwtRequest'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/JwtResponse'
+ 
+components:
+  schemas:
+    JwtRequest:
+      required:
+        - username
+        - password
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    JwtResponse:
+      type: object
+      properties:
+        jwtToken:
+          type: string
